@@ -52,7 +52,7 @@ Change "YOUR SECRET HERE" to a random string of characters. As crazy as you want
 
 2. Next, you need to create an admin password. Run the following from the usermesh folder.
 
-./setadminpassword.pl [YOURPASSWORD]
+<code>./setadminpassword.pl [YOURPASSWORD]</code>
 
 Substituting your own password as a parameter for the script. 
 
