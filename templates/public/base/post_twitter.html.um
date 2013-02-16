@@ -1,0 +1,6 @@
+<div style="margin-bottom: 40px">
+<h5>%DATE:D4, M4 D1ds Y2, h3:m2ts%</h5>
+%BODY%
+<p>%CATEGORIES% | <img src="/images/twitter.png" width="16" height="16" alt="twitter" title="From Twitter"> <a href="http://www.twitter.com/statuses/xxx/%SOURCEID%">Twitter</a> | <a href="%NICEURL%">Permalink</a></p>
+</div>
+

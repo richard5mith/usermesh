@@ -1,0 +1,12 @@
+<div id="map_%ID%" style="height: 300px; margin-bottom: 15px;"></div>
+<script>
+var map_%ID% = L.map('map_%ID%', { scrollWheelZoom: false }).setView([%LAT%, %LON%], 13);
+
+L.tileLayer('http://{s}.tile.cloudmade.com/%APIKEY%/997/256/{z}/{x}/{y}.png', {
+maxZoom: 18,
+attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery &copy; <a href="http://cloudmade.com">CloudMade</a>'
+}).addTo(map_%ID%);
+
+var marker_%ID% = L.marker([%LAT%, %LON%]).addTo(map_%ID%);
+marker_%ID%.bindPopup("<b>%NAME%</b>").openPopup();
+</script>

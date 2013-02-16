@@ -1,0 +1,6 @@
+<div style="margin-bottom: 40px">
+<h5>%DATE:D4, M4 D1ds Y2, h3:m2ts%</h5>
+%BODY%
+<p>%CATEGORIES% | <img src="/images/4sq.png" width="16" height="16" alt="4sq" title="From Foursquare"> <a href="http://www.foursquare.com/xx/checkin/%SOURCEID%">Foursquare</a> | <a href="%NICEURL%">Permalink</a></p>
+</div>
+

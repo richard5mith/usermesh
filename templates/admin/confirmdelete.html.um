@@ -1,0 +1,4 @@
+<form method="POST" action="%ACTION%">
+<p><input type="submit" name="confirm" value="Yes, go ahead" class="btn btn-danger"> <input type="submit" name="confirm" value="No, take me back" class="btn"></p>
+%HIDDENS%
+</form>

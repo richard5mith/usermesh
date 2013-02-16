@@ -1,0 +1,7 @@
+<div style="margin-bottom: 40px">
+<h1>%TITLE%</h1>
+<h5>%DATE:D4, M4 D1ds Y2, h3:m2ts%</h5>
+%BODY%
+<p>%CATEGORIES% | <a href="%NICEURL%">Permalink</a></p>
+</div>
+

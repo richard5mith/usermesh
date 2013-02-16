@@ -1,0 +1,6 @@
+<div style="margin-bottom: 40px">
+<h5>%DATE:D4, M4 D1ds Y2, h3:m2ts%</h5>
+%BODY%
+<p>%CATEGORIES% | <img src="/images/fb.jpg" width="16" height="16" alt="fb" title="From Facebook"> <a href="http://www.facebook.com/%SOURCEID%">Facebook</a> | <a href="%NICEURL%">Permalink</a></p>
+</div>
+

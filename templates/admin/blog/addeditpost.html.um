@@ -1,0 +1,96 @@
+<form class="form-horizontal" method="%METHOD%" action="%ACTION%"%ENCTYPE%%CLASS%%ID%%NAME%>
+<div class="row-fluid">
+	<div class="span9">
+		<p>%TITLE%</p>
+		<p>%BODY%</p>
+	</div>
+	<div class="span3">
+	
+		<h5>Post Date</h5>
+		<p>%DATE%</p>
+	
+		<h5>State</h5>
+		<p>%STATE%</p>
+
+		<h5>Filename</h5>
+		<p>%FILE%</p>
+
+		<h5>Type</h5>
+		<p>%TYPE%</p>
+		
+		<h5>Categories</h5>
+		<div style="overflow:scroll; height: 300px;" class="well well-small">
+		%CATEGORIES%
+		</div>
+		
+	</div>
+</div>
+
+%BUTTONS%
+</form>
+
+<script>
+
+	$('#state').bind('change', function() {
+			
+		if ($('#postbutton').val() === 'Save Changes') return; 
+		
+		this.value === 'draft' ? $('#postbutton').val('Create New Draft') : $('#postbutton').val('Create New Post');
+			
+	});
+	
+	$('#title').bind('keyup', function() {
+			
+		if ($('#title').val()) {
+			document.title = $('#title').val() + ' - Usermesh';
+		} else {
+			document.title = 'Untitled - Usermesh';			
+		}
+			
+	});
+	
+	// Credit to http://blog.alexmaccaw.com/svbtle-image-uploading
+	$('body').dropArea();
+	
+	$('body').bind('drop', function(e) {
+	  e.preventDefault();
+	  e = e.originalEvent;
+	
+	  var files = e.dataTransfer.files;
+	
+	  for (var i=0; i < files.length; i++) {
+		// Only upload images
+		if (/image/.test(files[i].type)) {
+		  createAttachment(files[i]);
+		}
+	  };
+	});
+		
+	function createAttachment(file) {
+	  var uid  = [(new Date).getTime(), 'original'].join('-');
+	
+	  var data = new FormData();
+	
+	  var ext = file.name.match(/\.([a-zA-Z]{3,4})$/);
+	  
+	  data.append('name', file.name);
+	  data.append('file', file);
+	  data.append('uid',  uid);
+	
+	  $.ajax({
+		url: '/admin/blog/attach/',
+		data: data,
+		cache: false,
+		contentType: false,
+		processData: false,
+		type: 'POST'
+		
+	  }).error(function(){
+	  	  alert("Something didn't go right with that upload");
+	  });
+	
+	  var absText = '![' + file.name + '](/images/' + uid + '.' + ext[1] + ')';
+	  $('#body').insertAtCaret(absText);
+	}
+	
+</script>

@@ -1,0 +1,7 @@
+<div class="control-group">
+<label class="control-label">%LABEL%%REQUIRED%</label>
+<div class="controls">
+%ITEM%%ERRORS%%HELP%
+</div>
+</div>
+	

@@ -1,0 +1,11 @@
+<p>%TEXT%</p>
+<ul>
+%ITEMS%
+</ul>
+<form method="POST">
+<p><input type="radio" name="confirm" value="yes" id="confirmyes" checked><label for="confirmyes"> Yes, go ahead.</label><br>
+<input type="radio" name="confirm" value="no" id="confirmno"><label for="confirmno"> No, just return to where I was.</label></p>
+<input type="submit" name="submit" value="Submit">
+<input type="hidden" name="action" value="%ACTION%">
+%HIDDENS%
+</form>

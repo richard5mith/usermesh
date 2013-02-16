@@ -1,0 +1,5 @@
+<div class="row-fluid">
+<div class="span6">%OLDER%</div>
+<div class="span6" style="text-align:right">%NEWER%</div>
+</div>
+

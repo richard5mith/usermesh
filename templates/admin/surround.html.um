@@ -1,0 +1,43 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>%TITLE% - Usermesh Admin</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="/bootstrap/css/bootstrap.css" rel="stylesheet">
+<link href="/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script src="/includes/main.js"></script>
+</head>
+<body>
+
+<div class="navbar navbar-inverse">
+	<div class="navbar-inner">
+		<a class="brand" href="/admin/">Usermesh Admin</a>
+		<ul class="nav">
+			[um admin_sidebar -filter:"top" -hidecategories:"1"]
+
+		</ul>
+		<ul class="nav pull-right">
+			<li><a href="/logout/">Logout</a></li>
+		</ul>
+	</div>
+</div>
+
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span2">
+			<div class="well" style="padding: 8px 0;">
+				<ul class="nav nav-list">
+					[um admin_sidebar]
+				</ul>
+			</div>
+		</div>
+		<div class="span10">
+			%CONTENT%
+		</div>
+	</div>
+</div>
+	
+</body>
+</html>
+

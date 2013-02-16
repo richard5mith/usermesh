@@ -1,0 +1,5 @@
+</table>
+</div>
+<p><span class="formheader">%LABEL%</span>%HELP%</p>
+<div class="formback" id="%ID%">
+<table cellspacing="2" cellpadding="2" class="formtable">
