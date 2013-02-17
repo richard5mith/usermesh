@@ -1,0 +1,51 @@
+TODO
+====
+
+Things I plan on working on next, in not necessarily this order...
+
+- Splitting up the templates in the skin more, to allow more design flexibility, headers/footers etc.
+- Settings screen
+- Skin chooser
+- Breadcrumbs in admin
+- Letting you set the nice url from the post page, rather than the filename (why would you care what the filename is?)
+- Let you run importers, static generation from within the admin
+- Automatically generate the new static when you update a post
+- Post preview
+- Category admin
+- Image management
+- Visitor stats
+- Fix tab highlights
+- Show number of items in a list
+- Text filtering, for source code highlighting (which is partially there) and other things like that
+- Easy way to drop in your Google analytics code into a skin without editing the skin
+- Site titles, subtitle, about us etc dropins to a skin, editable from control panel
+- Importers homepage with stats on imported items
+- New plugin for Static pages, like an "about me" page or a homepage which isn't your blog
+- Documentation. Lots and lots of documentation
+- Installation script
+- Auto-updater to latest version
+- The function that draws the map should be a helper in Helper.pm, not a function of Usermesh.pm
+- There's a lot of confusion in the code over whether $self is the app, the current request, or the current object. So the design pattern is wrong.
+- An alternative visual post editor instead of raw Markdown, but I just don't like anything I've found so far
+- Show a progress bar when you drag and drop an image into the text area and it's uploading
+- A post type of review, where you can enter an Amazon ASIN, and it pulls the details from Amazon as a header/footer for your content
+- Option for posting to Facebook / Twitter when you create a new blog post
+
+FUTURE IMPORTERS
+================
+
+Other things it would be nice to be able to import...
+
+- Instagram
+- Flickr
+- Smugmug
+- Photos from Dropbox, so you can just drop a photo into a folder and it appears on your site
+- last.fm scrobbles, max one post per day
+- Facebook photos
+- Twitter photos
+- github commits
+- stories you digg or reddit upvote
+- Bookmarks you put on instapaper, pinboard, pocket
+- whatfilm.com viewings / reviews
+
+
