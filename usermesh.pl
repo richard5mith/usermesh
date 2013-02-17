@@ -10,7 +10,8 @@ use lib dirname( __FILE__ ) . "/lib";
 app->secret('YOUR SECRET HERE');
 # SET THIS
 
-app->config(hypnotoad => {listen => ['http://*:80'], proxy => 1});
+# CHANGE THE PORT ON THE NEXT LINE IF YOU DON'T WANT TO RUN ON PORT 80
+app->config(hypnotoad => { listen => ['http://*:80'] });
 app->types->type(rss => 'application/xhtml+xml');
 
 use Usermesh();
