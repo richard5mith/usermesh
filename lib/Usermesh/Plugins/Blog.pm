@@ -198,7 +198,7 @@ sub addeditpost {
 	my $now = $self->um->date->now();
 	my $filedate = $now->[2] . "-" . sprintf("%02d", $now->[1]) . "-" . sprintf("%02d", $now->[0]);
 	
-	my @categories = @{LoadFile($self->um->documentroot . "/data/blog/categories.yaml")};
+	my @categories = @{LoadFile($self->um->documentroot . "/config/categories.yaml")};
 	
 	my $form = $self->um->form(undef, [ "title", "body", "file", "date", "categories", "state", "type", "postid", "submit" ], $self->req->url, "POST");
 	$form->p("title", { size => 40, class => "span10", style => "font-size: 20px", placeholder => "Optional Blog Post Title", id => "title" });
