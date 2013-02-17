@@ -93,3 +93,8 @@ CONTACT
 All of this is early days, including the documentation. If you have any questions, contact me at richard@square8.com.
 
 
+LICENSE
+=======
+
+Usermesh is licensed under GPLv2. http://www.gnu.org/licenses/gpl-2.0.txt
+
