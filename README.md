@@ -87,6 +87,18 @@ Next, simple run the import-facebook.pl, import-twitter.pl or import-foursquare.
 One thing to note, the Twitter API will only let you access the last 3,500 of your tweets. So if you have more than that, I'm afraid they won't all end up on your site.
 
 
+FOURSQUARE MAPS
+===============
+
+We render maps with Leaflet. Visit cloudmade.com to get an API key for the tiles, put that in your config file.
+
+
+EXAMPLE
+=======
+
+My own blog is powered by Usermesh. http://richardsmith.me/
+
+
 CONTACT
 =======
 
