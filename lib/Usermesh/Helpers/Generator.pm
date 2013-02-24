@@ -72,7 +72,7 @@ sub run {
 				push @{$categoryposts{$cat}}, { html => $posthtml, date => $postdata->{date} };
 			}
 			
-			$postdata->{title} = ($postdata->{title} ? "$postdata->{title} - $self->um->{CONFIG}->{blogname}" : $self->um->date->formatdate($postdata->{date}, "D4, M4 D1ds Y2, h2:m2") . " - " . $self->um->{CONFIG}->{blogname});
+			$postdata->{title} = ($postdata->{title} ? $postdata->{title} : $self->um->date->formatdate($postdata->{date}, "D4, M4 D1ds Y2, h2:m2"));
 			my $finalpage = $self->{TEMPLATES}->getblock("public/$skin/surround", { content => $posthtml . $self->{TEMPLATES}->getblock("public/$skin/postpagefooter"), %{$postdata}, categories => $self->drawcategories([keys %allcategories]) });
 			
 			my $result = $self->writepostpage($post, $postdata, $finalpage, $force);
@@ -144,7 +144,7 @@ sub writelistpage {
 		my $indexhead = $self->{TEMPLATES}->getblock("public/$skin/pagenav", { older => ($older ? $self->{TEMPLATES}->replaceinto($olderhtml, { link => $older }) : ""), newer => ($newer ? $self->{TEMPLATES}->replaceinto($newerhtml, { link => $newer }) : "") });
 		my $indexfoot = $self->{TEMPLATES}->getblock("public/$skin/pagenav", { older => ($older ? $self->{TEMPLATES}->replaceinto($olderhtml, { link => $older }) : ""), newer => ($newer ? $self->{TEMPLATES}->replaceinto($newerhtml, { link => $newer }) : "") });
 		
-		my $finalpage = $self->{TEMPLATES}->getblock("public/$skin/surround", { content => $indexhead . $pagedata . $indexfoot, title => "$self->um->{CONFIG}->{blogname}" . ($pagefolder ? " - Page $pagenumber" : ""), categories => $self->drawcategories([keys %{$allcategories}], undef, $categoryhighlight) });
+		my $finalpage = $self->{TEMPLATES}->getblock("public/$skin/surround", { content => $indexhead . $pagedata . $indexfoot, title => $self->um->{CONFIG}->{blogname} . ($pagefolder ? " - Page $pagenumber" : ""), categories => $self->drawcategories([keys %{$allcategories}], undef, $categoryhighlight) });
 		
 		if ($subfolder) {
 			mkdir($self->um->documentroot . "/public$subfolder");
@@ -231,7 +231,7 @@ sub generaterss {
 		my $text = unidecode($data->{body});
 
 		$rss->add_item(	title		=>	$data->{title} || $data->{urltitle},
-						link		=>	"http://$self->um->{CONFIG}->{blogdomain}$data->{niceurl}",
+						link		=>	"http://" . $self->um->{CONFIG}->{blogdomain} . $data->{niceurl},
 
 						description => $text,
 						dc			=>	{
@@ -246,8 +246,8 @@ sub generaterss {
 	}
 
 	$rss->channel(	title			=>	$self->um->{CONFIG}->{blogname},
-					link			=>	"http://$self->um->{CONFIG}->{blogdomain}/",
-					description		=>	"$self->um->{CONFIG}->{blogname} RSS Feed",
+					link			=>	"http://" . $self->um->{CONFIG}->{blogdomain} . "/",
+					description		=>	$self->um->{CONFIG}->{blogname} . " RSS Feed",
 					dc				=>	{
 											date => $self->makerssdate($lastdate),
 										} );
