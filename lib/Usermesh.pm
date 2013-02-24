@@ -21,7 +21,7 @@ sub new {
 	$self->{APP}	= shift;
 	$self->{CONFIG} = $self->loadconfig();
 	
-	$self->{ADMINMENU} = [ { text => "Home", link => "/admin/", category => "", top => 1 } ];
+	$self->{ADMINMENU} = [ { text => "Home", link => "/admin/", category => "", top => 1 }, { text => "Static Generator", link => "/admin/generator/", category => "" } ];
 	$self->{TEXTPLUGINS}->{showmap} = \&showmap;
 
 	return $self;

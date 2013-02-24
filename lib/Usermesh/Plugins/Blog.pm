@@ -126,6 +126,13 @@ sub listposts {
 	
 	my ($output);
 	
+	my $done = $self->param("done");
+	if ($done == 1) {
+		$output .= $self->um->getblock("form/success", { text => "Your post has been updated successfully." });	
+	} elsif ($done == 2) {
+		$output .= $self->um->getblock("form/success", { text => "Your new post has been saved successfully." });				
+	}
+	
 	$output .= $self->um->html->hparagraphs("Your Posts");
 	$output .= $self->um->html->buttons({ "Add Blog Post|btn-primary" => "/admin/blog/add/" });
 	
@@ -187,7 +194,7 @@ sub addeditpost {
 	my ($output);
 	
 	my $postid = $self->param("postid");
-
+	
 	if ($postid) {
 		$output .= $self->um->html->hparagraphs("Edit Blog Post");		
 	} else {
@@ -244,6 +251,8 @@ sub addeditpost {
 				
 				savepost($self, $s->{file}, { date => $s->{date}, title => $s->{title}, type => $s->{type}, body => $s->{body}, state => $s->{state}, categories => $s->{categories}, niceurl => $niceurl });
 								
+				$self->um->generator->run();
+				
 				return $self->redirect_to("/admin/blog/?done=1");
 				
 			} else {
@@ -255,7 +264,9 @@ sub addeditpost {
 				my ($year, $month, $day) = split(/-/, substr($s->{date}, 0, 10), 3);
 				my $niceurl = "/$year/$month/$day/" . $self->um->makeniceurl($s->{title} || substr($s->{date}, 11, 8)) . "/";				
 				savepost($self, $s->{file}, { date => $self->um->date->unixtotimestamp(time), title => $s->{title}, type => $s->{type}, body => $s->{body}, state => $s->{state}, categories => $s->{categories}, niceurl => $s->{niceurl} });
-								
+
+				$self->um->generator->run();
+				
 				return $self->redirect_to("/admin/blog/?done=2");
 				
 			}

@@ -84,7 +84,45 @@ group {
 		return $self->render('admin/surround', replace => { title => "Home", content => $output });
 	
 	};
+	
+	get "/generator" => sub {
+		
+		my $self = shift;
 
+		my ($output);		
+		
+		my $done = $self->param("done");
+		if ($done == 1) {
+			$output .= $self->um->getblock("form/success", { text => "All changes have been regenerated as static pages." });	
+		} elsif ($done == 2) {
+			$output .= $self->um->getblock("form/success", { text => "All the static pages of your site have been regenerated." });				
+		}
+		
+		$output .= $self->um->html->hparagraphs("Static Generator", "You can generate the static version of your site from here, just by clicking one of the buttons below.");
+		
+		$output .= $self->um->html->buttons({ "Generate Changes" => "/admin/generator/changes/" }, { "Generate All Pages" => "/admin/generator/all/" });
+		
+		return $self->render('admin/surround', replace => { title => "Static Generator", content => $output });
+		
+	};
+
+	get "/generator/changes" => sub {
+		
+		my $self = shift;
+
+		$self->um->generator->run();
+		
+		$self->redirect_to("/admin/generator?done=1");		
+	};
+	
+	get "/generator/all" => sub {
+		
+		my $self = shift;
+
+		$self->um->generator->run("1");
+		
+		$self->redirect_to("/admin/generator?done=2");
+	};
 };
 
 get "/login" => sub {
