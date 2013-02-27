@@ -164,7 +164,7 @@ sub createposts {
 		# And skip files containing our site domain, so we don't import tweets that link to this site
 		next if ($text =~ /$sitedomain/);
 		
-		$text = $um->html->formathtml({ text => $text, links => 1 });
+		$text = $um->html->formathtml({ text => $text });
 				
 		my $saved = savepost({ timestamp => $postdate, id => $id, body => $text, category => "Tweets" });
 		if ($saved) {

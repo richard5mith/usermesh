@@ -64,7 +64,7 @@ sub run {
 			my $postdata = $self->{BLOG}->getpost($post);
 			next if ($postdata->{state} eq "draft");
 	
-			$postdata->{body} = $self->um->html->formathtml({ text => $postdata->{body}, markdown => 1, textplugins => 1 });
+			$postdata->{body} = $self->um->html->formathtml({ text => $postdata->{body}, markdown => 1, textplugins => 1, links => 1 });
 			my $posthtml = $self->{TEMPLATES}->getblock("public/$skin/post" . ($postdata->{type} ne "blog" ? "_$postdata->{type}" : ""), { %{$postdata}, categories => $self->drawcategories($postdata->{categories}, "short") });		
 			
 			push @allposts, { html => $posthtml, date => $postdata->{date}, data => $postdata };
@@ -85,7 +85,7 @@ sub run {
 	}
 		
 	if ($totalwritten > 0) {
-		$self->writelistpage([ @allposts ], "");
+		$self->writelistpage([ @allposts ], "", undef, \%allcategories);
 		
 		foreach my $cat (keys %categoryposts) {
 			$self->writelistpage([ @{$categoryposts{$cat}} ], $self->um->makeniceurl($cat), $cat, \%allcategories);

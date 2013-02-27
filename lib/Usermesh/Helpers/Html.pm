@@ -1006,7 +1006,6 @@ sub h3paragraphs {
 	return $detail;
 }
 
-
 sub formathtml {
 
 	my $self				= shift;
@@ -1015,7 +1014,7 @@ sub formathtml {
 	my ($pre, $post, $imgtitle, $imgcaption);
 	
 	my $text = $p->{text};
-
+	
 	# TODO: make this an actual plugin system
 	if ($p->{textplugins}) {
 		$text =~ s!(?:[^\"\']|^)http(?:s|)://www.youtube.com/watch\?(?:.*?)v=(.*?)(?:&|;|$|\s).*?(\s|$)!<p><iframe width="640" height="360" src="http://www.youtube.com/embed/$1?rel=0" frameborder="0" allowfullscreen></iframe></p>!mg;
@@ -1026,12 +1025,12 @@ sub formathtml {
 		$text =~ s!\[shell\](.*?)\[/shell\]!qq|<pre class="brush:shell">| . $self->converthtml($1, { ">" => "&gt;", "<" => "&lt;" }) . qq|</pre>|!egms;
 	}
 
-	if ($p->{markdown}) {
-		$text = $self->{MARKDOWN}->markdown($text);
-	}
-
 	if ($p->{links}) {
 		$text = $self->makeurls($text);
+	}
+
+	if ($p->{markdown}) {
+		$text = $self->{MARKDOWN}->markdown($text);
 	}
 
 	return $text;
@@ -1077,7 +1076,7 @@ sub makeurls {
 	my $text				= shift;
 	
 	# URL
-	$text =~ s/(^|[^"\w])([\w]+:\/\/[\w\-?&\+:%#~,;=\.\/]+[\w\-&\+%#~=\/])($|[^"])/$1<a href="$2">$2<\/a>$3/g;
+	$text =~ s/(^|[^"\w>])([\w]+:\/\/[\w\-?&\+:%#~,;=\.\/\@]+[\w\-&\+%#~=\/\@])($|[^"<])/$1<a href="$2">$2<\/a>$3/g;
 	
 	# Email
 	$text =~ s/(^|\s)([a-z0-9_\-.]+\@[a-z0-9_\-.]+)(\W|\s|$)/$1<a href="mailto:$2">$2<\/a>$3/mig;
