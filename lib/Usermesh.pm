@@ -177,7 +177,7 @@ sub showmap {
 	$p->{id} = $self->{id}++;
 	$p->{apikey} = $selfum->{CONFIG}->{cloudmadeapikey};
 	
-	return $self->getblock("public/$selfum->{CONFIG}->{skin}/map", $p);
+	return $self->getblock("public/$selfum->{CONFIG}->{skin}/post_foursquare_map", $p);
 	
 }
 

@@ -3,7 +3,6 @@ TODO
 
 Things I plan on working on next, in not necessarily this order...
 
-- Splitting up the templates in the skin more, to allow more design flexibility, headers/footers etc.
 - Settings screen
 - Skin chooser
 - Breadcrumbs in admin
@@ -12,7 +11,7 @@ Things I plan on working on next, in not necessarily this order...
 - Category admin
 - Image management
 - Visitor stats
-- Fix tab highlights
+- Fix tab highlights in the admin
 - Show number of items in a list
 - Text filtering, for source code highlighting (which is partially there) and other things like that
 - Easy way to drop in your Google analytics code into a skin without editing the skin

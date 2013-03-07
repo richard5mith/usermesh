@@ -40,6 +40,10 @@ sub run {
 	
 	my $skin = $self->um->{CONFIG}->{skin} || "base";
 	
+	my $singleheader = $self->{TEMPLATES}->getblock("public/$skin/single_header");
+	my $singlefooter = $self->{TEMPLATES}->getblock("public/$skin/single_footer");
+	my $surround = $self->{TEMPLATES}->getblock("public/$skin/surround");
+		
 	my $totalwritten = 0;
 	my (@allposts, %allcategories, %categoryposts);
 	opendir(DATA, $self->um->documentroot . "/data");
@@ -47,6 +51,7 @@ sub run {
 		
 		next if ($folder =~ /^\./);
 			
+		# work out all the categories of post we have
 		opendir(POSTS, $self->um->documentroot . "/data/$folder");
 		while (my $post = readdir(POSTS)) {
 			next if ($post !~ /\.md$/);
@@ -57,6 +62,7 @@ sub run {
 			map { $allcategories{$_} = 1 } @{$postdata->{categories}};		
 		}
 		
+		# go through all the posts we have and create pages for them
 		opendir(POSTS, $self->um->documentroot . "/data/$folder");	
 		while (my $post = readdir(POSTS)) {
 			next if ($post !~ /\.md$/);
@@ -64,16 +70,25 @@ sub run {
 			my $postdata = $self->{BLOG}->getpost($post);
 			next if ($postdata->{state} eq "draft");
 	
+			# format the post
 			$postdata->{body} = $self->um->html->formathtml({ text => $postdata->{body}, markdown => 1, textplugins => 1, links => 1 });
-			my $posthtml = $self->{TEMPLATES}->getblock("public/$skin/post" . ($postdata->{type} ne "blog" ? "_$postdata->{type}" : ""), { %{$postdata}, categories => $self->drawcategories($postdata->{categories}, "short") });		
 			
+			# create the html for the post itself
+			my $posthtml = $self->{TEMPLATES}->getblock("public/$skin/post" . ($postdata->{type} ne "blog" ? "_$postdata->{type}" : "_blog"), { %{$postdata}, categories => $self->drawcategories($postdata->{categories}, "short") });		
+			
+			# push it into the list of all of them
 			push @allposts, { html => $posthtml, date => $postdata->{date}, data => $postdata };
+			
+			# and push it into a list for each of the categories it's in
 			foreach my $cat (@{$postdata->{categories}}) {
 				push @{$categoryposts{$cat}}, { html => $posthtml, date => $postdata->{date} };
 			}
 			
+			# Work out the page title
 			$postdata->{title} = ($postdata->{title} ? $postdata->{title} : $self->um->date->formatdate($postdata->{date}, "D4, M4 D1ds Y2, h2:m2"));
-			my $finalpage = $self->{TEMPLATES}->getblock("public/$skin/surround", { content => $posthtml . $self->{TEMPLATES}->getblock("public/$skin/postpagefooter"), %{$postdata}, categories => $self->drawcategories([keys %allcategories]) });
+			
+			# Create the final page for a single post
+			my $finalpage = $self->{TEMPLATES}->replaceinto($surround, { content => $singleheader . $posthtml . $singlefooter, %{$postdata}, categories => $self->drawcategories([keys %allcategories]) });
 			
 			my $result = $self->writepostpage($post, $postdata, $finalpage, $force);
 			
@@ -112,8 +127,15 @@ sub writelistpage {
 		$subfolder = "/$subfolder";
 	}
 	
-	my $olderhtml = $self->{TEMPLATES}->getblock("public/$skin/older");
-	my $newerhtml = $self->{TEMPLATES}->getblock("public/$skin/newer");
+	my $homeheader = $self->{TEMPLATES}->getblock("public/$skin/home_header") || "";
+	my $homefooter = $self->{TEMPLATES}->getblock("public/$skin/home_footer") || "";	
+	my $categoryheader = $self->{TEMPLATES}->getblock("public/$skin/category_header") || "";
+	my $categoryfooter = $self->{TEMPLATES}->getblock("public/$skin/category_footer") || "";
+	my $surround = $self->{TEMPLATES}->getblock("public/$skin/surround");
+	
+	my $pagenav = $self->{TEMPLATES}->getblock("public/$skin/pagenav_surround");	
+	my $olderhtml = $self->{TEMPLATES}->getblock("public/$skin/pagenav_older");
+	my $newerhtml = $self->{TEMPLATES}->getblock("public/$skin/pagenav_newer");
 	
 	my $totalposts = $#{$posts} + 1;
 	my $totalpages = $self->um->html->countpages($totalposts, 15);
@@ -137,14 +159,20 @@ sub writelistpage {
 		my $older = "$subfolder/page-" . ($pagenumber + 1) . "/index.html";
 		my $newer = "$subfolder/page-" . ($pagenumber - 1) . "/index.html";
 		
-		$newer = "/index.html" if ($pagenumber == 2); 
+		$newer = "$subfolder/index.html" if ($pagenumber == 2); 
 		$newer = "" if ($pagenumber == 1);
 		$older = "" if ($pagenumber == $totalpages);
 		
-		my $indexhead = $self->{TEMPLATES}->getblock("public/$skin/pagenav", { older => ($older ? $self->{TEMPLATES}->replaceinto($olderhtml, { link => $older }) : ""), newer => ($newer ? $self->{TEMPLATES}->replaceinto($newerhtml, { link => $newer }) : "") });
-		my $indexfoot = $self->{TEMPLATES}->getblock("public/$skin/pagenav", { older => ($older ? $self->{TEMPLATES}->replaceinto($olderhtml, { link => $older }) : ""), newer => ($newer ? $self->{TEMPLATES}->replaceinto($newerhtml, { link => $newer }) : "") });
+		my $pagenavcomplete = $self->{TEMPLATES}->replaceinto($pagenav, { older => ($older ? $self->{TEMPLATES}->replaceinto($olderhtml, { link => $older }) : ""), newer => ($newer ? $self->{TEMPLATES}->replaceinto($newerhtml, { link => $newer }) : "") });
 		
-		my $finalpage = $self->{TEMPLATES}->getblock("public/$skin/surround", { content => $indexhead . $pagedata . $indexfoot, title => $self->um->{CONFIG}->{blogname} . ($pagefolder ? " - Page $pagenumber" : ""), categories => $self->drawcategories([keys %{$allcategories}], undef, $categoryhighlight) });
+		my $pagecontent;
+		if ($pagenumber == 1) {
+			$pagecontent = $self->{TEMPLATES}->replaceinto($homeheader, { pagenav => $pagenavcomplete }) . $pagedata . $self->{TEMPLATES}->replaceinto($homefooter, { pagenav => $pagenavcomplete });
+		} else {
+			$pagecontent = $self->{TEMPLATES}->replaceinto($categoryheader, { pagenav => $pagenavcomplete }) . $pagedata . $self->{TEMPLATES}->replaceinto($categoryfooter, { pagenav => $pagenavcomplete });
+		}
+		
+		my $finalpage = $self->{TEMPLATES}->replaceinto($surround, { content => $pagecontent, title => $self->um->{CONFIG}->{blogname} . ($pagefolder ? " - Page $pagenumber" : ""), categories => $self->drawcategories([keys %{$allcategories}], undef, $categoryhighlight) });
 		
 		if ($subfolder) {
 			mkdir($self->um->documentroot . "/public$subfolder");
@@ -203,7 +231,7 @@ sub drawcategories {
 	
 	my ($template, $sep);
 	if ($mode eq "short") {
-		$template = $self->{TEMPLATES}->getblock("public/$skin/categorylineshort");
+		$template = $self->{TEMPLATES}->getblock("public/$skin/categoryline_short");
 		$sep = ", ";
 	} else {
 		$template = $self->{TEMPLATES}->getblock("public/$skin/categoryline");
