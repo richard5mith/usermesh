@@ -8,7 +8,6 @@ use Text::Unidecode qw(unidecode);
 use XML::RSS();
 
 use Usermesh::Plugins::Blog();
-use Usermesh::Plugins::Templates();
 
 sub new {
 
@@ -17,9 +16,8 @@ sub new {
 
 	my $self		= bless {}, $class;
 
-	$self->{UM}			= shift;
-	$self->{BLOG}		= Usermesh::Plugins::Blog->new($self->{UM});
-	$self->{TEMPLATES}	= Usermesh::Plugins::Templates->new($self->{UM});
+	$self->{UM}		= shift;
+	$self->{BLOG}	= Usermesh::Plugins::Blog->new($self->{UM});
 	
 	return $self;
 
@@ -40,9 +38,9 @@ sub run {
 	
 	my $skin = $self->um->{CONFIG}->{skin} || "base";
 	
-	my $singleheader = $self->{TEMPLATES}->getblock("public/$skin/single_header");
-	my $singlefooter = $self->{TEMPLATES}->getblock("public/$skin/single_footer");
-	my $surround = $self->{TEMPLATES}->getblock("public/$skin/surround");
+	my $singleheader = $self->um->getblock("public/$skin/single_header");
+	my $singlefooter = $self->um->getblock("public/$skin/single_footer");
+	my $surround = $self->um->getblock("public/$skin/surround");
 		
 	my $totalwritten = 0;
 	my (@allposts, %allcategories, %categoryposts);
@@ -74,7 +72,7 @@ sub run {
 			$postdata->{body} = $self->um->html->formathtml({ text => $postdata->{body}, markdown => 1, textplugins => 1, links => 1 });
 			
 			# create the html for the post itself
-			my $posthtml = $self->{TEMPLATES}->getblock("public/$skin/post" . ($postdata->{type} ne "blog" ? "_$postdata->{type}" : "_blog"), { %{$postdata}, categories => $self->drawcategories($postdata->{categories}, "short") });		
+			my $posthtml = $self->um->getblock("public/$skin/post" . ($postdata->{type} ne "blog" ? "_$postdata->{type}" : "_blog"), { %{$postdata}, categories => $self->drawcategories($postdata->{categories}, "short") });		
 			
 			# push it into the list of all of them
 			push @allposts, { html => $posthtml, date => $postdata->{date}, data => $postdata };
@@ -88,7 +86,7 @@ sub run {
 			$postdata->{title} = ($postdata->{title} ? $postdata->{title} : $self->um->date->formatdate($postdata->{date}, "D4, M4 D1ds Y2, h2:m2"));
 			
 			# Create the final page for a single post
-			my $finalpage = $self->{TEMPLATES}->replaceinto($surround, { content => $singleheader . $posthtml . $singlefooter, %{$postdata}, categories => $self->drawcategories([keys %allcategories]) });
+			my $finalpage = $self->um->replaceinto($surround, { content => $singleheader . $posthtml . $singlefooter, %{$postdata}, categories => $self->drawcategories([keys %allcategories]) });
 			
 			my $result = $self->writepostpage($post, $postdata, $finalpage, $force);
 			
@@ -127,15 +125,15 @@ sub writelistpage {
 		$subfolder = "/$subfolder";
 	}
 	
-	my $homeheader = $self->{TEMPLATES}->getblock("public/$skin/home_header") || "";
-	my $homefooter = $self->{TEMPLATES}->getblock("public/$skin/home_footer") || "";	
-	my $categoryheader = $self->{TEMPLATES}->getblock("public/$skin/category_header") || "";
-	my $categoryfooter = $self->{TEMPLATES}->getblock("public/$skin/category_footer") || "";
-	my $surround = $self->{TEMPLATES}->getblock("public/$skin/surround");
+	my $homeheader = $self->um->getblock("public/$skin/home_header") || "";
+	my $homefooter = $self->um->getblock("public/$skin/home_footer") || "";	
+	my $categoryheader = $self->um->getblock("public/$skin/category_header") || "";
+	my $categoryfooter = $self->um->getblock("public/$skin/category_footer") || "";
+	my $surround = $self->um->getblock("public/$skin/surround");
 	
-	my $pagenav = $self->{TEMPLATES}->getblock("public/$skin/pagenav_surround");	
-	my $olderhtml = $self->{TEMPLATES}->getblock("public/$skin/pagenav_older");
-	my $newerhtml = $self->{TEMPLATES}->getblock("public/$skin/pagenav_newer");
+	my $pagenav = $self->um->getblock("public/$skin/pagenav_surround");	
+	my $olderhtml = $self->um->getblock("public/$skin/pagenav_older");
+	my $newerhtml = $self->um->getblock("public/$skin/pagenav_newer");
 	
 	my $totalposts = $#{$posts} + 1;
 	my $totalpages = $self->um->html->countpages($totalposts, 15);
@@ -163,16 +161,16 @@ sub writelistpage {
 		$newer = "" if ($pagenumber == 1);
 		$older = "" if ($pagenumber == $totalpages);
 		
-		my $pagenavcomplete = $self->{TEMPLATES}->replaceinto($pagenav, { older => ($older ? $self->{TEMPLATES}->replaceinto($olderhtml, { link => $older }) : ""), newer => ($newer ? $self->{TEMPLATES}->replaceinto($newerhtml, { link => $newer }) : "") });
+		my $pagenavcomplete = $self->um->replaceinto($pagenav, { older => ($older ? $self->um->replaceinto($olderhtml, { link => $older }) : ""), newer => ($newer ? $self->um->replaceinto($newerhtml, { link => $newer }) : "") });
 		
 		my $pagecontent;
 		if ($pagenumber == 1) {
-			$pagecontent = $self->{TEMPLATES}->replaceinto($homeheader, { pagenav => $pagenavcomplete }) . $pagedata . $self->{TEMPLATES}->replaceinto($homefooter, { pagenav => $pagenavcomplete });
+			$pagecontent = $self->um->replaceinto($homeheader, { pagenav => $pagenavcomplete }) . $pagedata . $self->um->replaceinto($homefooter, { pagenav => $pagenavcomplete });
 		} else {
-			$pagecontent = $self->{TEMPLATES}->replaceinto($categoryheader, { pagenav => $pagenavcomplete }) . $pagedata . $self->{TEMPLATES}->replaceinto($categoryfooter, { pagenav => $pagenavcomplete });
+			$pagecontent = $self->um->replaceinto($categoryheader, { pagenav => $pagenavcomplete }) . $pagedata . $self->um->replaceinto($categoryfooter, { pagenav => $pagenavcomplete });
 		}
 		
-		my $finalpage = $self->{TEMPLATES}->replaceinto($surround, { content => $pagecontent, title => $self->um->{CONFIG}->{blogname} . ($pagefolder ? " - Page $pagenumber" : ""), categories => $self->drawcategories([keys %{$allcategories}], undef, $categoryhighlight) });
+		my $finalpage = $self->um->replaceinto($surround, { content => $pagecontent, title => $self->um->{CONFIG}->{blogname} . ($pagefolder ? " - Page $pagenumber" : ""), categories => $self->drawcategories([keys %{$allcategories}], undef, $categoryhighlight) });
 		
 		if ($subfolder) {
 			mkdir($self->um->documentroot . "/public$subfolder");
@@ -231,14 +229,14 @@ sub drawcategories {
 	
 	my ($template, $sep);
 	if ($mode eq "short") {
-		$template = $self->{TEMPLATES}->getblock("public/$skin/categoryline_short");
+		$template = $self->um->getblock("public/$skin/categoryline_short");
 		$sep = ", ";
 	} else {
-		$template = $self->{TEMPLATES}->getblock("public/$skin/categoryline");
+		$template = $self->um->getblock("public/$skin/categoryline");
 		$sep = "";		
 	}
 	
-	return join($sep, map { $self->{TEMPLATES}->replaceinto($template, { link => "/" . $self->um->makeniceurl($_) . "/", name => $_, highlight => ($highlight eq $_ ? qq| class="active"| : "") }) } sort { $a cmp $b } @{$list});
+	return join($sep, map { $self->um->replaceinto($template, { link => "/" . $self->um->makeniceurl($_) . "/", name => $_, highlight => ($highlight eq $_ ? qq| class="active"| : "") }) } sort { $a cmp $b } @{$list});
 	
 }
 

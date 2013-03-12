@@ -21,7 +21,6 @@ Things I plan on working on next, in not necessarily this order...
 - Documentation. Lots and lots of documentation
 - Installation script
 - Auto-updater to latest version
-- The function that draws the map should be a helper in Helper.pm, not a function of Usermesh.pm
 - There's a lot of confusion in the code over whether $self is the app, the current request, or the current object. So the design pattern is wrong.
 - An alternative visual post editor instead of raw Markdown, but I just don't like anything I've found so far
 - Show a progress bar when you drag and drop an image into the text area and it's uploading

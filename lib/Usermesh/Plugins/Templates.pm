@@ -176,13 +176,8 @@ sub parse {
 				}
 			}
 
-			if (defined $self->um->{TEXTPLUGINS}->{$cmd}) {
-				$output .= $self->um->{TEXTPLUGINS}->{$cmd}($self, $self->um, \%paramhash);
-			} else {
-				$output .= $self->$cmd(\%paramhash);
+			$output .= $self->$cmd(\%paramhash);
 				
-			}
-			
 		} else {
 			$output .= $part;
 		}

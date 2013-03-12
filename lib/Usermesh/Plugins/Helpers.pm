@@ -35,6 +35,18 @@ sub register {
 		return $sidebar;
 		
 	});
+	
+	$app->helper(showmap => sub {
+	
+		my $self		= shift;
+		my $p			= shift;
+
+		$p->{id} = $self->{mapid}++;
+		$p->{apikey} = $self->um->{CONFIG}->{cloudmadeapikey};
+		
+		return $self->um->getblock("public/" . $self->um->{CONFIG}->{skin} . "/post_foursquare_map", $p);
+		
+	});
 		
 }
 

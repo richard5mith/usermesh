@@ -22,7 +22,6 @@ sub new {
 	$self->{CONFIG} = $self->loadconfig();
 	
 	$self->{ADMINMENU} = [ { text => "Home", link => "/admin/", category => "", top => 1 }, { text => "Static Generator", link => "/admin/generator/", category => "" } ];
-	$self->{TEXTPLUGINS}->{showmap} = \&showmap;
 
 	return $self;
 	
@@ -164,20 +163,6 @@ sub loadconfig {
 	my $self				= shift;
 	
 	return LoadFile($self->documentroot . "/config/main.yaml");
-	
-}
-
-# This should be merged with the text plugins in Html.pm to create a single way of processing things within posts
-sub showmap {
-	
-	my $self = shift;
-	my $selfum = shift || $self;
-	my $p = shift;
-	
-	$p->{id} = $self->{id}++;
-	$p->{apikey} = $selfum->{CONFIG}->{cloudmadeapikey};
-	
-	return $self->getblock("public/$selfum->{CONFIG}->{skin}/post_foursquare_map", $p);
 	
 }
 
