@@ -1,4 +1,4 @@
-# This is currently very broken due to changes in the Twitter API and Cloudmade Maps API. An update will come.
+# This is currently very broken due to changes in the Twitter API and Cloudmade Maps API.
 
 Usermesh
 ========
