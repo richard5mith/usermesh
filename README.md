@@ -15,8 +15,6 @@ Usermesh requires...
 
 It should be quick and simple to get started.
 
-Visit us on the web at http://usermesh.org
-
 INSTALLATION
 ============
 
@@ -93,18 +91,6 @@ FOURSQUARE MAPS
 ===============
 
 We render maps with Leaflet. Visit cloudmade.com to get an API key for the tiles, put that in your config file.
-
-
-EXAMPLE
-=======
-
-My own blog is powered by Usermesh. http://richardsmith.me/
-
-
-CONTACT
-=======
-
-All of this is early days, including the documentation. If you have any questions, contact me at richard@square8.com.
 
 
 LICENSE
